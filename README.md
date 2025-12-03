@@ -16,14 +16,14 @@ Hello World
 
 **
 ### 
-### Resources & Documentation  
-Essential links and resources for further information:
+### 
+### Resources
 
-- CleanStart Website: https://www.cleanstart.com
+- Official Documentation: https://www.python.org/doc/
 - View Provenance, Specifications, SBOM, Signature at: https://images.cleanstart.com/images/python
+- Docker Hub: https://hub.docker.com/r/cleanstart/python
 - CleanStart All Images: https://images.cleanstart.com
-- CleanStart Community Images: https://hub.docker.com/u/cleanstart
-- Other location for Community image: https://hub.docker.com/r/cleanstart/python
+- CleanStart All Community Images: https://hub.docker.com/u/cleanstart
 
 ---
 

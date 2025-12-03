@@ -14,18 +14,18 @@ Expected output
 Hello World
 ```
 
-**
-### 
-### 
-### Resources
+- *
 
-- Official Documentation: https://www.python.org/doc/
-- View Provenance, Specifications, SBOM, Signature at: https://images.cleanstart.com/images/python
-- Docker Hub: https://hub.docker.com/r/cleanstart/python
-- CleanStart All Images: https://images.cleanstart.com
-- CleanStart All Community Images: https://hub.docker.com/u/cleanstart
+### 
+###
 
----
+## Resources
+
+- **Official Documentation:** https://www.python.org/doc/
+- **Provenance / SBOM / Signature:** https://images.cleanstart.com/images/python
+- **Docker Hub:** https://hub.docker.com/r/cleanstart/python
+- **CleanStart All Images:** https://images.cleanstart.com
+- **CleanStart Community Images:** https://hub.docker.com/u/cleanstart
 
 ### Vulnerability Disclaimer
 

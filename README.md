@@ -35,8 +35,8 @@ Typical scenarios where this container excels:
 
 Download the runtime container images:
 ```bash
-docker pull cleanstart/python:latest
-docker pull cleanstart/python:latest-dev
+docker pull ghcr.io/cleanstart-containers/python:latest
+docker pull ghcr.io/cleanstart-containers/python:latest-dev
 ```
 
 ### Python Hello World Application
@@ -45,7 +45,7 @@ A minimal Python Hello World application using the CleanStart image.
 
 Run the following command:
 ```bash
-docker run --rm cleanstart/python:latest-dev -c "print('Hello World')"
+docker run --rm ghcr.io/cleanstart-containers/python:latest-dev -c "print('Hello World')"
 ```
 
 Expected output:
@@ -57,24 +57,25 @@ Hello World
 
 Start interactive session for development:
 ```bash
-docker run -it --name python-dev \
+docker run -it --name test-python \
+  --entrypoint /bin/sh \
   -v $(pwd):/workspace \
   -w /workspace \
-  cleanstart/python:latest-dev /bin/sh
+  ghcr.io/cleanstart-containers/python:latest-dev
 ```
 
 ### Run Hello World
 
 Execute a simple Hello World program:
 ```bash
-docker run --rm cleanstart/python:latest-dev -c 'print("Hello, World!")'
+docker run --rm ghcr.io/cleanstart-containers/python:latest-dev -c 'print("Hello, World!")'
 ```
 
 ### Mount Workspace
 
 Run container with local workspace mounted:
 ```bash
-docker run --rm -v $(pwd):/app -w /app --user $(id -u):$(id -g) cleanstart/python:latest-dev -c 'import os; print(os.listdir("."))'
+docker run --rm -v $(pwd):/app -w /app --user $(id -u):$(id -g) ghcr.io/cleanstart-containers/python:latest-dev -c 'import os; print(os.listdir("."))'
 ```
 
 ### Application Server
@@ -85,7 +86,7 @@ docker run -d --name python-app \
   -p 8000:8000 \
   -v $(pwd):/app \
   -w /app \
-  cleanstart/python:latest
+  ghcr.io/cleanstart-containers/python:latest
 ```
 
 ---
@@ -132,8 +133,8 @@ securityContext:
 
 ### Multi-Platform Images
 ```bash
-docker pull --platform linux/amd64 cleanstart/python:latest
-docker pull --platform linux/arm64 cleanstart/python:latest
+docker pull --platform linux/amd64 ghcr.io/cleanstart-containers/python:latest
+docker pull --platform linux/arm64 ghcr.io/cleanstart-containers/python:latest
 ```
 
 ---

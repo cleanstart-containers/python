@@ -14,6 +14,11 @@ def get_connection():
     return sqlite3.connect(DATABASE_PATH)
 
 def create_database():
+    # Ensure the directory for the SQLite DB exists (important when /app is a bind mount)
+    db_dir = os.path.dirname(DATABASE_PATH)
+    if db_dir and not os.path.exists(db_dir):
+        os.makedirs(db_dir, exist_ok=True)
+
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''

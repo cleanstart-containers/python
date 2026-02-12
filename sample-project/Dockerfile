@@ -4,9 +4,17 @@ FROM cleanstart/python:latest-dev
 # Set working directory
 WORKDIR /app
 
+USER root
+
+RUN apk update && apk search pip
+
 # Create non-root user for security
 RUN adduser --disabled-password --gecos '' appuser && \
     chown -R appuser:appuser /app
+
+RUN python -m venv /venv
+
+ENV PATH="/venv/bin:$PATH"
 
 # Copy requirements first for better caching
 COPY requirements.txt .
@@ -38,4 +46,5 @@ ENV HOST=0.0.0.0
 ENV PORT=5000
 
 # Run the application
-CMD ["python", "app.py"]
+ENTRYPOINT ["python"]
+CMD ["app.py"]

@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python-app-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: python-app
+        image: cleanstart/python:latest-dev
+        args:
+          - "-c"
+          - |
+            import sys
+            import os
+            import platform
+
+            print("=== Python Image Verification ===")
+            print("Python version :", sys.version)
+            print("Platform       :", platform.system(), platform.release())
+            print("Architecture   :", platform.machine())
+            print("Executable     :", sys.executable)
+            print("=== Image is working correctly ===")
+      restartPolicy: Never
+  backoffLimit: 0

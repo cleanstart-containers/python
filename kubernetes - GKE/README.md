@@ -1,67 +1,114 @@
-# Step 0: Connect to Your GKE Cluster (if not already connected)
-```bash
-gcloud container clusters get-credentials <cluster-name> --zone us-central1-a
+# python-app — Kubernetes Image Test Project
+
+A minimal Kubernetes setup to test a cleanstart Python Docker image (`cleanstart/python:latest-dev`).
+
+---
+
+## Project Structure
+
 ```
-# Right Directory
-```bash
-cd /cleanstart-containers/containers/python/gcp
+python-app/
+├── namespace.yaml       # Namespace: python-app
+├── job.yaml             # Job to run and test the image
+└── README.md
 ```
 
-# Step 1: Create the Namespace
+---
+
+## Prerequisites
+
+- `kubectl` configured and pointing to your cluster
+- Docker image `cleanstart/python:latest-dev` accessible by your cluster
+
+---
+
+## Run
+
 ```bash
 kubectl apply -f namespace.yaml
+kubectl apply -f job.yaml -n python-app
 ```
 
-# Step 2: Build the Docker Image
+---
+
+## Test Image Functionality
+
+### 1. Watch the Job complete
+
 ```bash
-docker build -t python:latest .
+kubectl get jobs -n python-app --watch
 ```
 
-# Step 3: Tag the Image for Artifact Registry
+Expected output when successful:
+```
+NAME             COMPLETIONS   DURATION   AGE
+python-app-job   1/1           3s         5s
+```
+
+`1/1` means the container ran and exited with code 0.
+
+---
+
+### 2. Get the pod name
+
 ```bash
-docker tag python:latest <artifact_registry>/python:latest
+kubectl get pods -n python-app
 ```
 
-# Step 4: Configure Docker Authentication
+The pod status will be `Completed` on success or `Error` on failure.
+
+---
+
+### 3. Check logs
+
+This is the primary way to verify what your image actually did:
+
 ```bash
-gcloud auth configure-docker us-central1-docker.pkg.dev
+kubectl logs <POD-NAME> -n python-app
 ```
 
-# Step 5: Push the Image
+Expected output:
+```
+=== Python Image Verification ===
+Python version : 3.14.3 (main, Feb  5 2026, 09:31:03) [GCC 13.2.1 20240309]
+Platform       : Linux 6.6.87.2-microsoft-standard-WSL2
+Architecture   : x86_64
+Executable     : /usr/bin/python
+=== Image is working correctly ===
+```
+
+If the pod has already finished, logs are still available until the namespace is deleted.
+
+---
+
+### 4. Inspect exit code
+
 ```bash
-docker push <artifact_registry>/python:latest
+kubectl describe pod <POD-NAME> -n python-app
 ```
 
-# Step 6: Deploy the Application
+Look for `Last State: Terminated` → `Exit Code` in the output:
+
+- **Exit Code 0** — image ran and completed successfully
+- **Exit Code non-0** — image encountered an error; check logs above
+
+---
+
+## Re-run the Job
+
+Kubernetes does not allow re-applying the same Job name. Delete and re-create it to run again:
+
 ```bash
-kubectl apply -f deployment.yaml -n python
+kubectl delete job python-app-job -n python-app
+kubectl apply -f job.yaml -n python-app
 ```
 
-# Step 7: Create the Service
+---
+
+## Teardown
+
 ```bash
-kubectl apply -f service.yaml -n python
+kubectl delete namespace python-app
 ```
 
-# Step 8: Verify Deployment
-```bash
-kubectl get all -n python
-```
-# Result through IP 
-<img width="1887" height="865" alt="image" src="https://github.com/user-attachments/assets/ebb1accb-f714-402f-9940-33c95c40aca4" />
-
-
-# Useful Commands
-```bash
-kubectl logs -f deployment/jdk-installer -n python
-kubectl get all -n python
-kubectl get events -n jdk --sort-by='.lastTimestamp'
-```
-
-# Cleanup
-```bash
-kubectl delete -f gcp/service.yaml
-kubectl delete -f gcp/deployment.yaml
-kubectl delete -f gcp/namespace.yaml
-
-```
-
+This removes the namespace along with all resources inside it.
